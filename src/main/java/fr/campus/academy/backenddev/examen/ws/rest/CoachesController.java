@@ -20,29 +20,28 @@ public class CoachesController {
 
     private final CoachRepository coachRepository;
 
-//    @GetMapping
-//    public ResponseEntity<List<CoachDTO>> getAllCoaches() {
-//        List<Coach> coachList = this.coachRepository.findAll();
-//        return ResponseEntity.ok(
-//                coachList
-//                        .stream()
-//                        .map(coach -> {
-//                            TeamDTO teamDTO = new TeamDTO(coach.getTeam());
-//                            return new CoachDTO(coach.getId(), coach.getName(), coach.getTeam(), coach.getAssistants());
-//                        })
-//                        .collect(Collectors.toList())
-//        );
-//    }
-//
-//    @PostMapping(consumes = APPLICATION_JSON_VALUE)
-//    public ResponseEntity<CoachDTO> createPowers(@RequestBody CoachDTO coachDTO) {
-//        Coach coach = new Coach();
-//        coach.setName(coachDTO.getName());
-//        coach.setTeam(coachDTO.getTeam());
-//        // On sauvegarde le nouvel objet
-//        Coach createdPower = this.powerRepository.save(power);
-//        // On retourne l'objet crée
-//        return ResponseEntity.ok(new PowerDTO(createdPower.getId(), createdPower.getName(), createdPower.getDescription()));
-//    }
+    @GetMapping
+    public ResponseEntity<List<CoachDTO>> getAllCoaches() {
+        List<Coach> coachList = this.coachRepository.findAll();
+        return ResponseEntity.ok(
+                coachList
+                        .stream()
+                        .map(coach -> {
+                            return new CoachDTO(coach.getId(), coach.getName(), coach.getTeam());
+                        })
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<CoachDTO> createPowers(@RequestBody CoachDTO coachDTO) {
+        Coach coach = new Coach();
+        coach.setName(coachDTO.getName());
+        coach.setTeam(coachDTO.getTeam());
+        // On sauvegarde le nouvel objet
+        Coach createdPower = this.powerRepository.save(power);
+        // On retourne l'objet crée
+        return ResponseEntity.ok(new PowerDTO(createdPower.getId(), createdPower.getName(), createdPower.getDescription()));
+    }
 
 }
