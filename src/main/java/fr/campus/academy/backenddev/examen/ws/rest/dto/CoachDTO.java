@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class CoachDTO {
     private Long id;
     private String name;
-    private TeamDTO team;
+    private Long team;
 }

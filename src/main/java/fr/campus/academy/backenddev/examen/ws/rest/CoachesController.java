@@ -1,13 +1,15 @@
 package fr.campus.academy.backenddev.examen.ws.rest;
 
 import fr.campus.academy.backenddev.examen.models.Coach;
+import fr.campus.academy.backenddev.examen.models.Team;
 import fr.campus.academy.backenddev.examen.repositories.CoachRepository;
+import fr.campus.academy.backenddev.examen.repositories.TeamRepository;
 import fr.campus.academy.backenddev.examen.ws.rest.dto.CoachDTO;
-import fr.campus.academy.backenddev.examen.ws.rest.dto.TeamDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CoachesController {
 
     private final CoachRepository coachRepository;
+    private final TeamRepository teamRepository;
 
     @GetMapping
     public ResponseEntity<List<CoachDTO>> getAllCoaches() {
@@ -27,21 +30,62 @@ public class CoachesController {
                 coachList
                         .stream()
                         .map(coach -> {
-                            return new CoachDTO(coach.getId(), coach.getName(), coach.getTeam());
+                            Long team = coach.getTeam() != null ? coach.getTeam().getId() : null;
+                            return new CoachDTO(coach.getId(), coach.getName(), team);
                         })
                         .collect(Collectors.toList())
         );
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<CoachDTO> createPowers(@RequestBody CoachDTO coachDTO) {
+    public ResponseEntity<CoachDTO> createCoaches(@RequestBody CoachDTO coachDTO) {
         Coach coach = new Coach();
         coach.setName(coachDTO.getName());
-        coach.setTeam(coachDTO.getTeam());
-        // On sauvegarde le nouvel objet
-        Coach createdPower = this.powerRepository.save(power);
-        // On retourne l'objet crée
-        return ResponseEntity.ok(new PowerDTO(createdPower.getId(), createdPower.getName(), createdPower.getDescription()));
+        Team team;
+        if (coachDTO.getTeam() != null) {
+            try {
+                team = this.teamRepository.getOne(coachDTO.getTeam());
+                coach.setTeam(team);
+            } catch (EntityNotFoundException e) {
+                return ResponseEntity.notFound().build();
+            } catch (Exception e) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+        }
+        Coach createdCoach = this.coachRepository.save(coach);
+        Long teamID = coach.getTeam() != null ? coach.getTeam().getId() : null;
+        return ResponseEntity.ok(new CoachDTO(createdCoach.getId(), createdCoach.getName(), teamID));
     }
 
+    @DeleteMapping(path = "{id}")
+    public void deleteCoach(@PathVariable Long id) {
+        this.coachRepository.deleteById(id);
+    }
+
+    @PutMapping(path = "{id}", consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<CoachDTO> updateCoach(@PathVariable Long id, @RequestBody CoachDTO coachDTO) {
+        Coach coach;
+        try {
+            coach = this.coachRepository.getOne(id);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        coach.setName(coachDTO.getName());
+        Team team;
+        if (coachDTO.getTeam() != null) {
+            try {
+                team = this.teamRepository.getOne(coachDTO.getTeam());
+                coach.setTeam(team);
+            } catch (EntityNotFoundException e) {
+                return ResponseEntity.notFound().build();
+            } catch (Exception e) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+        }
+        Coach updatedCoach = this.coachRepository.save(coach);
+        Long teamID = coach.getTeam() != null ? coach.getTeam().getId() : null;
+        return ResponseEntity.ok(new CoachDTO(updatedCoach.getId(), updatedCoach.getName(), teamID));
+    }
 }

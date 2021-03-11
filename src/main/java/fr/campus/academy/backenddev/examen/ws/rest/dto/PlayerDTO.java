@@ -13,6 +13,6 @@ public class PlayerDTO {
     private Long id;
     private String name;
     private Integer number;
-    private TeamDTO team;
-    private List<PositionDTO> positions;
+    private Long team;
+    private List<Long> positions;
 }

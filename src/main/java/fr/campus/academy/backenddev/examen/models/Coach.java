@@ -16,6 +16,7 @@ public class Coach {
     private String name;
 
     @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(unique = true)
     private Team team;
 
 }

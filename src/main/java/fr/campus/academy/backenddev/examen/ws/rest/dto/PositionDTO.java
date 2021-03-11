@@ -12,5 +12,5 @@ import java.util.List;
 public class PositionDTO {
     private Long id;
     private String label;
-    private List<PlayerDTO> players;
+    private List<Long> players;
 }

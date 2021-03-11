@@ -22,6 +22,7 @@ public class Team {
     private String name;
 
     @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "team")
+    @JoinColumn(unique = true)
     private Coach coach;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "team")
