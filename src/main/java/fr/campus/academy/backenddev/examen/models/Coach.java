@@ -16,13 +16,6 @@ public class Coach {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "assistant")
-    private List<Coach> assistants;
-
-    @ManyToOne()
-    @JoinColumn(name = "assistant_id")
-    private Coach assistant;
-
     @OneToOne(cascade = CascadeType.PERSIST)
     private Team team;
 
