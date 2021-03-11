@@ -7,8 +7,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "poste")
-public class Poste {
+@Table(name = "position")
+public class Position {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class Poste {
 
     private String label;
 
-    @ManyToMany(mappedBy = "postes", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "positions", fetch = FetchType.LAZY)
     private List<Player> players;
 
 }

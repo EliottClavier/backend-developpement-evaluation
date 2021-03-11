@@ -24,10 +24,10 @@ public class Player {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     @JoinTable(
-            name="poste_player",
+            name="position_player",
             joinColumns = { @JoinColumn(name = "player_id")},
-            inverseJoinColumns = { @JoinColumn(name = "poste_id")}
+            inverseJoinColumns = { @JoinColumn(name = "position_id")}
     )
-    private List<Poste> postes;
+    private List<Position> positions;
 
 }
