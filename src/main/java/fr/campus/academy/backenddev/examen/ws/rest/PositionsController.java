@@ -57,10 +57,11 @@ public class PositionsController {
         return ResponseEntity.ok(new PositionDTO(createdPosition.getId(), createdPosition.getLabel(), createdPosition.getPlayers().stream().map(Player::getId).collect(Collectors.toList())));
     }
 
-    @DeleteMapping(path = "{id}")
-    public void deletePosition(@PathVariable Long id) {
-        this.positionRepository.deleteById(id);
-    }
+// Problème de cascade, pas de delete pour Position sinon suppression de tous les objets liés
+//    @DeleteMapping(path = "{id}")
+//    public void deletePosition(@PathVariable Long id) {
+//        this.positionRepository.deleteById(id);
+//    }
 
     @PutMapping(path = "{id}", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<PositionDTO> updatePosition(@PathVariable Long id, @RequestBody PositionDTO positionDTO) {

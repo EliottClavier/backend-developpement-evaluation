@@ -22,7 +22,12 @@ public class Player {
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.PERSIST
+    })
     @JoinTable(
             name="position_player",
             joinColumns = { @JoinColumn(name = "player_id")},

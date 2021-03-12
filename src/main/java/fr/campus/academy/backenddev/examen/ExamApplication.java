@@ -20,29 +20,29 @@ public class ExamApplication {
 	public static void main(String[] args) { SpringApplication.run(ExamApplication.class, args); }
 
 	ExamApplication(CoachRepository coachRepository) {
-//		Coach coach = new Coach();
-//		coach.setName("Jorge Sampaoli");
-//
-//		Team team = new Team();
-//		team.setName("Olympique de Marseille");
-//
-//		Player player = new Player();
-//		player.setName("Mickaël Cuisance");
-//		player.setTeam(team);
-//		player.setNumber(17);
-//
-//		Position position = new Position();
-//		position.setLabel("Milieu");
-//		List<Position> positionsList = new ArrayList<>();
-//		positionsList.add(position);
-//
-//		player.setPositions(positionsList);
-//		List<Player> playersList = new ArrayList<>();
-//		playersList.add(player);
-//		team.setPlayers(playersList);
-//
-//		coach.setTeam(team);
-//		coachRepository.save(coach);
+		Coach coach = new Coach();
+		coach.setName("Jorge Sampaoli");
+
+		Team team = new Team();
+		team.setName("Olympique de Marseille");
+
+		Player player = new Player();
+		player.setName("Mickaël Cuisance");
+		player.setTeam(team);
+		player.setNumber(17);
+
+		Position position = new Position();
+		position.setLabel("Milieu");
+		List<Position> positionsList = new ArrayList<>();
+		positionsList.add(position);
+
+		player.setPositions(positionsList);
+		List<Player> playersList = new ArrayList<>();
+		playersList.add(player);
+		team.setPlayers(playersList);
+
+		coach.setTeam(team);
+		coachRepository.save(coach);
 	}
 
 }
