@@ -20,9 +20,9 @@ public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("user").password(this.passwordEncoder.encode("mdpuser")).roles("USER")
+                .withUser("visitor").password(this.passwordEncoder.encode("visitor")).roles("VISITOR")
                 .and()
-                .withUser("admin").password(this.passwordEncoder.encode("mdpadmin")).roles("ADMIN", "USER");
+                .withUser("organisator").password(this.passwordEncoder.encode("organisator")).roles("ORGANISATOR", "VISITOR");
     }
 
     @Override
@@ -33,11 +33,11 @@ public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers(HttpMethod.PUT).hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST).hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET).hasAnyRole("ADMIN", "USER")
-                .antMatchers("/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT).hasRole("ORGANISATOR")
+                .antMatchers(HttpMethod.POST).hasRole("ORGANISATOR")
+                .antMatchers(HttpMethod.DELETE).hasRole("ORGANISATOR")
+                .antMatchers(HttpMethod.GET).hasAnyRole("ORGANISATOR", "VISITOR")
+                .antMatchers("/**").hasAnyRole("VISITOR", "ORGANISATOR")
                 .anyRequest().authenticated();
     }
 
