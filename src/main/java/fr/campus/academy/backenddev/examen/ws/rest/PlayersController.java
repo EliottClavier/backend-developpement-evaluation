@@ -100,6 +100,8 @@ public class PlayersController {
             } catch (Exception e) {
                 return ResponseEntity.unprocessableEntity().build();
             }
+        } else {
+            player.setTeam(null);
         }
         List<Position> positions;
         if (playerDTO.getPositions() != null) {
