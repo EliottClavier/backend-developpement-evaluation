@@ -103,12 +103,11 @@ public class TeamsController {
                 return ResponseEntity.unprocessableEntity().build();
             }
         }
-        List<Player> players;
         if (teamDTO.getPlayers() != null) {
             try {
-                players = this.playerRepository.findAllById(teamDTO.getPlayers());
-                // teamDTO.getPlayers().stream().map(this.playerRepository::getOne).collect(Collectors.toList())
-                team.setPlayers(players);
+                team.getPlayers().forEach(player -> this.playerRepository.getOne(player.getId()).setTeam(null));
+                this.playerRepository.flush();
+                teamDTO.getPlayers().forEach(player -> this.playerRepository.getOne(player).setTeam(team));
             } catch (EntityNotFoundException e) {
                 return ResponseEntity.notFound().build();
             } catch (Exception e) {

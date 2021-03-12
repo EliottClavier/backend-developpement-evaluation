@@ -18,8 +18,8 @@ public class Player {
 
     private Integer number;
 
-    @ManyToOne()
-    @JoinColumn(name = "team_id", unique = true)
+    @ManyToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "team_id")
     private Team team;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })

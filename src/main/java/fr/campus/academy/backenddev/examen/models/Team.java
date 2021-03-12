@@ -21,11 +21,11 @@ public class Team {
     )
     private String name;
 
-    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "team")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "team")
     @JoinColumn(unique = true)
     private Coach coach;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "team")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
     private List<Player> players;
 
 }

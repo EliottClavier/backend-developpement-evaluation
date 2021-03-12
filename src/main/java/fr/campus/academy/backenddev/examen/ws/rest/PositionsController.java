@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,11 +73,18 @@ public class PositionsController {
             return ResponseEntity.unprocessableEntity().build();
         }
         position.setLabel(positionDTO.getLabel());
-        List<Player> players;
         if (positionDTO.getPlayers() != null) {
             try {
-                players = positionDTO.getPlayers().stream().map(this.playerRepository::getOne).collect(Collectors.toList());
-                position.setPlayers(players);
+                position.getPlayers().forEach(player -> {
+                    Player playerObj = this.playerRepository.getOne(player.getId());
+                    List<Position> positions = player.getPositions();
+                    positions.removeIf(pos -> pos.getId().equals(position.getId()));
+                    playerObj.setPositions(positions);
+                    // .flush() enregistre les modifications (utile quand les IDs de Players passés dans le json n'existe pas sans quoi les valeurs null
+                    // ne s'enregistre pas)
+                    this.playerRepository.flush();
+                });
+                positionDTO.getPlayers().forEach(player -> this.playerRepository.getOne(player).getPositions().add(position));
             } catch (EntityNotFoundException e) {
                 return ResponseEntity.notFound().build();
             } catch (Exception e) {

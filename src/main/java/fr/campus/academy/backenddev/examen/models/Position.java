@@ -16,7 +16,7 @@ public class Position {
 
     private String label;
 
-    @ManyToMany(mappedBy = "positions", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "positions", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     private List<Player> players;
 
 }
