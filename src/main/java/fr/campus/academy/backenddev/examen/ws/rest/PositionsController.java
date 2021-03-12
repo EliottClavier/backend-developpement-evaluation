@@ -1,9 +1,11 @@
 package fr.campus.academy.backenddev.examen.ws.rest;
 
+import fr.campus.academy.backenddev.examen.models.Coach;
 import fr.campus.academy.backenddev.examen.models.Player;
 import fr.campus.academy.backenddev.examen.models.Position;
 import fr.campus.academy.backenddev.examen.repositories.PlayerRepository;
 import fr.campus.academy.backenddev.examen.repositories.PositionRepository;
+import fr.campus.academy.backenddev.examen.ws.rest.dto.CoachDTO;
 import fr.campus.academy.backenddev.examen.ws.rest.dto.PositionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,19 @@ public class PositionsController {
                         })
                         .collect(Collectors.toList())
         );
+    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity<PositionDTO> getPositionById(@PathVariable Long id) {
+        try {
+            Position position = this.positionRepository.getOne(id);
+            List<Long> players = position.getPlayers().stream().map(Player::getId).collect(Collectors.toList());
+            return ResponseEntity.ok(new PositionDTO(position.getId(), position.getLabel(), players));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)

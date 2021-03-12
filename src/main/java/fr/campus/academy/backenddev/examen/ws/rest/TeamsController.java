@@ -2,10 +2,12 @@ package fr.campus.academy.backenddev.examen.ws.rest;
 
 import fr.campus.academy.backenddev.examen.models.Coach;
 import fr.campus.academy.backenddev.examen.models.Player;
+import fr.campus.academy.backenddev.examen.models.Position;
 import fr.campus.academy.backenddev.examen.models.Team;
 import fr.campus.academy.backenddev.examen.repositories.CoachRepository;
 import fr.campus.academy.backenddev.examen.repositories.PlayerRepository;
 import fr.campus.academy.backenddev.examen.repositories.TeamRepository;
+import fr.campus.academy.backenddev.examen.ws.rest.dto.PositionDTO;
 import fr.campus.academy.backenddev.examen.ws.rest.dto.TeamDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,20 @@ public class TeamsController {
                         })
                         .collect(Collectors.toList())
         );
+    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity<TeamDTO> getTeamById(@PathVariable Long id) {
+        try {
+            Team team = this.teamRepository.getOne(id);
+            List<Long> players = team.getPlayers().stream().map(Player::getId).collect(Collectors.toList());
+            Long coachID = team.getCoach() != null ? team.getCoach().getId() : null;
+            return ResponseEntity.ok(new TeamDTO(team.getId(), team.getName(), coachID, players));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)

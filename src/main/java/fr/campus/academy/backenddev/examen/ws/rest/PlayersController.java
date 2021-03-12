@@ -41,6 +41,20 @@ public class PlayersController {
         );
     }
 
+    @GetMapping(path = "{id}")
+    public ResponseEntity<PlayerDTO> getPlayerById(@PathVariable Long id) {
+        try {
+            Player player = this.playerRepository.getOne(id);
+            List<Long> positions = player.getPositions().stream().map(Position::getId).collect(Collectors.toList());
+            Long teamID = player.getTeam() != null ? player.getTeam().getId() : null;
+            return ResponseEntity.ok(new PlayerDTO(player.getId(), player.getName(), player.getNumber(), teamID, positions));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+    }
+
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<PlayerDTO> createPlayers(@RequestBody PlayerDTO playerDTO) {
         Player player = new Player();
